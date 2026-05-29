@@ -1,0 +1,9 @@
+.git
+.github
+target
+apps/sdqp-frontend/node_modules
+apps/sdqp-frontend/dist
+tests/fixtures/generated
+**/*.log
+**/.DS_Store
+

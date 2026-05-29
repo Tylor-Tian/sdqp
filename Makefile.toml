@@ -1,0 +1,11 @@
+[tasks.bootstrap]
+command = "powershell"
+args = ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "scripts/bootstrap.ps1"]
+
+[tasks.test]
+command = "powershell"
+args = ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "scripts/test-all.ps1"]
+
+[tasks.seed]
+command = "powershell"
+args = ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "scripts/seed-fixtures.ps1"]

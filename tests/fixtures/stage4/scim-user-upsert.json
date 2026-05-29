@@ -1,0 +1,14 @@
+{
+  "operation": "upsert",
+  "user": {
+    "external_id": "scim-user-analyst",
+    "tenant_id": "tenant-alpha",
+    "user_name": "scim-analyst",
+    "display_name": "SCIM Analyst",
+    "email": "scim-analyst@example.internal",
+    "active": true,
+    "groups": [
+      "scim:analysts"
+    ]
+  }
+}

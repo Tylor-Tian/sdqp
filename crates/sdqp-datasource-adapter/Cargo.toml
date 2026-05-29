@@ -1,0 +1,22 @@
+[package]
+name = "sdqp-datasource-adapter"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+async-trait.workspace = true
+chrono.workspace = true
+reqwest.workspace = true
+sdqp-core = { path = "../sdqp-core" }
+serde.workspace = true
+serde_json.workspace = true
+sqlx.workspace = true
+sqlx-postgres.workspace = true
+tokio.workspace = true
+ulid.workspace = true
+
+[dev-dependencies]
+axum.workspace = true

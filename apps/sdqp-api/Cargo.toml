@@ -1,0 +1,54 @@
+[package]
+name = "sdqp-api"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+arrow.workspace = true
+axum.workspace = true
+base64.workspace = true
+chrono.workspace = true
+futures-util.workspace = true
+http.workspace = true
+reqwest.workspace = true
+rskafka.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sdqp-audit = { path = "../../crates/sdqp-audit" }
+sdqp-approval-engine = { path = "../../crates/sdqp-approval-engine" }
+sdqp-config = { path = "../../crates/sdqp-config" }
+sdqp-contracts = { path = "../../crates/sdqp-contracts" }
+sdqp-core = { path = "../../crates/sdqp-core" }
+sdqp-data-classification = { path = "../../crates/sdqp-data-classification" }
+sdqp-data-view = { path = "../../crates/sdqp-data-view" }
+sdqp-datasource-adapter = { path = "../../crates/sdqp-datasource-adapter" }
+sdqp-evidence = { path = "../../crates/sdqp-evidence" }
+sdqp-encryption = { path = "../../crates/sdqp-encryption" }
+sdqp-hr-integration = { path = "../../crates/sdqp-hr-integration" }
+sdqp-permission-engine = { path = "../../crates/sdqp-permission-engine" }
+sdqp-system-security = { path = "../../crates/sdqp-system-security" }
+sdqp-tenant-isolation = { path = "../../crates/sdqp-tenant-isolation" }
+sdqp-ueba = { path = "../../crates/sdqp-ueba" }
+sdqp-watermark = { path = "../../crates/sdqp-watermark" }
+thiserror.workspace = true
+tokio.workspace = true
+tonic.workspace = true
+tracing-subscriber.workspace = true
+tracing.workspace = true
+ulid.workspace = true
+sqlx.workspace = true
+sqlx-postgres.workspace = true
+
+[dev-dependencies]
+crc32fast.workspace = true
+flate2.workspace = true
+futures-util.workspace = true
+hex.workspace = true
+sha2.workspace = true
+sdqp-test-kit = { path = "../../crates/sdqp-test-kit" }
+sdqp-worker = { path = "../sdqp-worker" }
+tokio-tungstenite.workspace = true
+tower.workspace = true

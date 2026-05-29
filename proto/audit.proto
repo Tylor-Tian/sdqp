@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package sdqp.audit.v1;
+
+message AuditEventRef {
+  string event_id = 1;
+}
+
+message AuditSearchRequest {
+  string tenant_id = 1;
+  string project_id = 2;
+  string action = 3;
+  string result = 4;
+  string actor_user_id = 5;
+  string resource_id_contains = 6;
+  bool include_projectless = 7;
+  uint32 limit = 8;
+}
+
+message AuditEvent {
+  string event_id = 1;
+  string action = 2;
+  string result = 3;
+  string actor_user_id = 4;
+  string tenant_id = 5;
+  string project_id = 6;
+  string resource_id = 7;
+  string occurred_at = 8;
+}
+
+message AuditSearchResponse {
+  repeated AuditEvent events = 1;
+  uint32 total_matches = 2;
+  bool chain_valid = 3;
+}
+
+service AuditService {
+  rpc SearchEvents(AuditSearchRequest) returns (AuditSearchResponse);
+}

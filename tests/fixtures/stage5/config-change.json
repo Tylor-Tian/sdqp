@@ -1,0 +1,4 @@
+{
+  "key": "kms.rotation.interval_days",
+  "value": "90"
+}

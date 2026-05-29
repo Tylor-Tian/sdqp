@@ -1,0 +1,13 @@
+[package]
+name = "sdqp-test-kit"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+sdqp-config = { path = "../sdqp-config" }
+sdqp-contracts = { path = "../sdqp-contracts" }
+sdqp-core = { path = "../sdqp-core" }
+serde_json.workspace = true

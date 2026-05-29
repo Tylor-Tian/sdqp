@@ -1,0 +1,35 @@
+[package]
+name = "sdqp-worker"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+axum.workspace = true
+http.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sdqp-audit = { path = "../../crates/sdqp-audit" }
+sdqp-config = { path = "../../crates/sdqp-config" }
+sdqp-contracts = { path = "../../crates/sdqp-contracts" }
+sdqp-core = { path = "../../crates/sdqp-core" }
+sdqp-data-classification = { path = "../../crates/sdqp-data-classification" }
+sdqp-data-view = { path = "../../crates/sdqp-data-view" }
+sdqp-datasource-adapter = { path = "../../crates/sdqp-datasource-adapter" }
+sdqp-encryption = { path = "../../crates/sdqp-encryption" }
+sdqp-system-security = { path = "../../crates/sdqp-system-security" }
+sdqp-tenant-isolation = { path = "../../crates/sdqp-tenant-isolation" }
+thiserror.workspace = true
+tokio.workspace = true
+tracing-subscriber.workspace = true
+tracing.workspace = true
+ulid.workspace = true
+sqlx.workspace = true
+sqlx-postgres.workspace = true
+
+[dev-dependencies]
+sdqp-api = { path = "../sdqp-api" }
+sdqp-test-kit = { path = "../../crates/sdqp-test-kit" }
+tower.workspace = true

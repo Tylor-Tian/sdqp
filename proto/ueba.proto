@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package sdqp.ueba.v1;
+
+message AlertRef {
+  string alert_id = 1;
+}
+
+message UebaAlert {
+  string alert_id = 1;
+  string user_id = 2;
+  string severity = 3;
+  string recommended_action = 4;
+}
+
+message UebaAlertsResponse {
+  repeated UebaAlert alerts = 1;
+}
+
+service UebaService {
+  rpc ListAlerts(AlertRef) returns (UebaAlertsResponse);
+}

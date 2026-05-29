@@ -1,0 +1,157 @@
+syntax = "proto3";
+
+package sdqp.auth.v1;
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+  string device_fingerprint = 3;
+}
+
+message LoginResponse {
+  string pending_session_id = 1;
+  bool mfa_required = 2;
+  string method = 3;
+  string challenge_id = 4;
+  string auth_source = 5;
+  MfaChallenge challenge = 6;
+}
+
+message MfaVerifyRequest {
+  string pending_session_id = 1;
+  string code = 2;
+  WebAuthnAssertion webauthn_assertion = 3;
+}
+
+message TokenPairResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+  string session_id = 3;
+}
+
+message WebAuthnRequest {
+  string challenge = 1;
+  string rp_id = 2;
+  string origin = 3;
+  string credential_id = 4;
+  uint64 timeout_ms = 5;
+  string user_verification = 6;
+}
+
+message WebAuthnAssertion {
+  string credential_id = 1;
+  string client_data_json = 2;
+  string authenticator_data = 3;
+  string signature = 4;
+}
+
+message MfaChallenge {
+  string challenge_id = 1;
+  string method = 2;
+  string reason = 3;
+  string expires_at = 4;
+  WebAuthnRequest webauthn_request = 5;
+}
+
+message RefreshRequest {
+  string refresh_token = 1;
+}
+
+message SsoStartRequest {
+  string protocol = 1;
+  string login_hint = 2;
+}
+
+message SsoStartResponse {
+  string authorization_url = 1;
+  string relay_state = 2;
+  string mock_code = 3;
+}
+
+message SsoCallbackRequest {
+  string protocol = 1;
+  string code = 2;
+  string device_fingerprint = 3;
+}
+
+message DevicePostureRequest {
+  string refresh_token = 1;
+  string profile = 2;
+  bool ip_drift = 3;
+  bool impossible_travel = 4;
+  bool exfiltration_hint = 5;
+  uint32 query_burst = 6;
+  uint32 denied_burst = 7;
+  uint32 export_burst = 8;
+}
+
+message DevicePostureResponse {
+  uint32 risk_score = 1;
+  string action = 2;
+  bool compliant = 3;
+  repeated string reasons = 4;
+  bool step_up_required = 5;
+  bool session_revoked = 6;
+  MfaChallenge step_up_challenge = 7;
+}
+
+message StepUpVerifyRequest {
+  string refresh_token = 1;
+  string code = 2;
+  WebAuthnAssertion webauthn_assertion = 3;
+}
+
+message ScimUser {
+  string external_id = 1;
+  string tenant_id = 2;
+  string user_name = 3;
+  string display_name = 4;
+  string email = 5;
+  bool active = 6;
+  repeated string groups = 7;
+}
+
+message ScimGroup {
+  string external_id = 1;
+  string tenant_id = 2;
+  string display_name = 3;
+  bool active = 4;
+  repeated string members = 5;
+}
+
+message ScimUserSyncRequest {
+  string operation = 1;
+  ScimUser user = 2;
+  string external_id = 3;
+}
+
+message ScimGroupSyncRequest {
+  string operation = 1;
+  ScimGroup group = 2;
+  string external_id = 3;
+}
+
+message ScimSyncResponse {
+  uint32 users_changed = 1;
+  uint32 users_disabled = 2;
+  uint32 groups_changed = 3;
+  uint32 groups_disabled = 4;
+  uint32 memberships_changed = 5;
+}
+
+message LogoutResponse {
+  bool revoked = 1;
+}
+
+service AuthService {
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc StartSso(SsoStartRequest) returns (SsoStartResponse);
+  rpc CompleteSso(SsoCallbackRequest) returns (LoginResponse);
+  rpc VerifyMfa(MfaVerifyRequest) returns (TokenPairResponse);
+  rpc ReportDevicePosture(DevicePostureRequest) returns (DevicePostureResponse);
+  rpc VerifyStepUp(StepUpVerifyRequest) returns (TokenPairResponse);
+  rpc Refresh(RefreshRequest) returns (TokenPairResponse);
+  rpc Logout(RefreshRequest) returns (LogoutResponse);
+  rpc SyncScimUser(ScimUserSyncRequest) returns (ScimSyncResponse);
+  rpc SyncScimGroup(ScimGroupSyncRequest) returns (ScimSyncResponse);
+}

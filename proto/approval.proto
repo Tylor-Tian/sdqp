@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package sdqp.approval.v1;
+
+message ApprovalTaskRef {
+  string approval_id = 1;
+}
+
+message ApprovalTask {
+  string approval_id = 1;
+  string project_id = 2;
+  string state = 3;
+  repeated string pending_approvers = 4;
+}
+
+service ApprovalService {
+  rpc GetApprovalTask(ApprovalTaskRef) returns (ApprovalTask);
+}

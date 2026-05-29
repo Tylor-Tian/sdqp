@@ -1,0 +1,11 @@
+root = true
+
+[*.{rs,toml,md,ts,tsx,json,yml,yaml,proto,ps1}]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 2
+
+[*.rs]
+indent_size = 4

@@ -1,0 +1,14 @@
+environment = "ci"
+
+[api]
+port = 28080
+
+[worker]
+port = 28081
+
+[frontend]
+title = "SDQP CI"
+port = 24173
+
+[observability]
+log_filter = "warn,sdqp_api=info,sdqp_worker=info"

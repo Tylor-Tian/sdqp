@@ -1,0 +1,99 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: sdqp
+      POSTGRES_USER: sdqp
+      POSTGRES_PASSWORD: sdqp
+    ports:
+      - "15432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sdqp -d sdqp"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:25.3
+    environment:
+      CLICKHOUSE_SKIP_USER_SETUP: "1"
+    ports:
+      - "18123:8123"
+      - "19000:9000"
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+      - ./db/clickhouse/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--query", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:RELEASE.2025-02-03T21-03-04Z
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    ports:
+      - "19001:9001"
+      - "19002:9000"
+    volumes:
+      - minio-data:/data
+
+  minio-init:
+    image: minio/mc:RELEASE.2025-02-15T10-36-16Z
+    depends_on:
+      minio:
+        condition: service_started
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        until /usr/bin/mc alias set sdqp http://minio:9000 minio minio123; do
+          sleep 2
+        done
+        /usr/bin/mc mb --ignore-existing sdqp/sdqp-snapshots
+        /usr/bin/mc mb --ignore-existing sdqp/sdqp-evidence
+
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:v24.3.9
+    command:
+      - redpanda
+      - start
+      - --overprovisioned
+      - --smp
+      - "1"
+      - --memory
+      - "512M"
+      - --reserve-memory
+      - "0M"
+      - --node-id
+      - "0"
+      - --check=false
+      - --kafka-addr
+      - internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr
+      - internal://redpanda:9092,external://127.0.0.1:19092
+    ports:
+      - "19092:19092"
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    ports:
+      - "11025:1025"
+      - "18025:8025"
+
+  mockserver:
+    image: mockserver/mockserver:5.15.0
+    environment:
+      MOCKSERVER_SERVER_PORT: 1080
+    ports:
+      - "11080:1080"
+
+volumes:
+  postgres-data:
+  clickhouse-data:
+  minio-data:

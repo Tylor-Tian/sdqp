@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package sdqp.query.v1;
+
+message QuerySubmitRequest {
+  string data_source_id = 1;
+  string source_type = 2;
+  repeated string fields = 3;
+}
+
+message QuerySubmitResponse {
+  string task_id = 1;
+  string status = 2;
+  string websocket_path = 3;
+}
+
+message QueryTaskRef {
+  string task_id = 1;
+}
+
+message QueryTaskStatusResponse {
+  string task_id = 1;
+  string state = 2;
+  string snapshot_id = 3;
+  bool cache_hit = 4;
+  string error = 5;
+}
+
+message SnapshotPageRequest {
+  string snapshot_id = 1;
+  uint32 page_size = 2;
+  string cursor = 3;
+}
+
+message FieldDisplayPolicy {
+  string field_name = 1;
+  bool masked = 2;
+  string render_mode = 3;
+  string watermark_strength = 4;
+}
+
+message SnapshotRow {
+  map<string, string> values = 1;
+}
+
+message SnapshotPageResponse {
+  string snapshot_id = 1;
+  repeated string columns = 2;
+  repeated SnapshotRow rows = 3;
+  string next_cursor = 4;
+  repeated FieldDisplayPolicy field_policies = 5;
+  string watermark_text = 6;
+}
+
+message PivotAnalysisRequest {
+  string snapshot_id = 1;
+  string dimension = 2;
+}
+
+message PivotBucket {
+  string key = 1;
+  uint64 value = 2;
+}
+
+message PivotAnalysisResponse {
+  string snapshot_id = 1;
+  string dimension = 2;
+  string metric = 3;
+  repeated PivotBucket buckets = 4;
+  string watermark_text = 5;
+}
+
+message DrilldownRequest {
+  string snapshot_id = 1;
+  string dimension = 2;
+  string value = 3;
+  repeated string fields = 4;
+  uint32 page_size = 5;
+  string cursor = 6;
+}
+
+service QueryService {
+  rpc SubmitQuery(QuerySubmitRequest) returns (QuerySubmitResponse);
+  rpc GetTaskStatus(QueryTaskRef) returns (QueryTaskStatusResponse);
+  rpc GetSnapshotPage(SnapshotPageRequest) returns (SnapshotPageResponse);
+  rpc GetPivot(PivotAnalysisRequest) returns (PivotAnalysisResponse);
+  rpc GetDrilldown(DrilldownRequest) returns (SnapshotPageResponse);
+}

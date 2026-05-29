@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package sdqp.project.v1;
+
+message ProjectSummary {
+  string project_id = 1;
+  string tenant_id = 2;
+  string state = 3;
+  bool can_accept_new_permissions = 4;
+  bool can_export = 5;
+  bool read_only = 6;
+}
+
+message ListProjectsRequest {
+  string tenant_id = 1;
+}
+
+message ListProjectsResponse {
+  repeated ProjectSummary projects = 1;
+}
+
+message UpdateProjectStateRequest {
+  string tenant_id = 1;
+  string project_id = 2;
+  string next_state = 3;
+  string reason = 4;
+}
+
+message UpdateProjectStateResponse {
+  string project_id = 1;
+  string previous_state = 2;
+  string current_state = 3;
+  uint32 revoked_permissions = 4;
+  uint32 deleted_snapshots = 5;
+  string checkpoint_id = 6;
+}
+
+service ProjectService {
+  rpc ListProjects(ListProjectsRequest) returns (ListProjectsResponse);
+  rpc UpdateProjectState(UpdateProjectStateRequest) returns (UpdateProjectStateResponse);
+}

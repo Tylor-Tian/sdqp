@@ -1,0 +1,134 @@
+services:
+  postgres:
+    extends:
+      file: docker-compose.infra.yml
+      service: postgres
+
+  clickhouse:
+    extends:
+      file: docker-compose.infra.yml
+      service: clickhouse
+
+  minio:
+    extends:
+      file: docker-compose.infra.yml
+      service: minio
+
+  minio-init:
+    extends:
+      file: docker-compose.infra.yml
+      service: minio-init
+
+  redpanda:
+    extends:
+      file: docker-compose.infra.yml
+      service: redpanda
+
+  mailhog:
+    extends:
+      file: docker-compose.infra.yml
+      service: mailhog
+
+  mockserver:
+    extends:
+      file: docker-compose.infra.yml
+      service: mockserver
+
+  hive-metastore:
+    extends:
+      file: docker-compose.hive.yml
+      service: hive-metastore
+
+  hive-server:
+    extends:
+      file: docker-compose.hive.yml
+      service: hive-server
+
+  hive-init:
+    extends:
+      file: docker-compose.hive.yml
+      service: hive-init
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/sdqp-api/Dockerfile
+    environment:
+      SDQP_ENVIRONMENT: local-docker
+      SDQP_API_HOST: 0.0.0.0
+      SDQP_API_PORT: 8080
+      SDQP_HIVE_CONNECTION_URI: jdbc:hive2://hive-server:10000/default
+      SDQP_HIVE_PROVIDER: beeline
+      SDQP_HIVE_COMMAND: beeline
+      SDQP_HIVE_USERNAME: hive
+      SDQP_HIVE_TABLE: sdqp_fixture_employees
+      SDQP_HIVE_POLL_INTERVAL_MS: 250
+    depends_on:
+      postgres:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+      minio:
+        condition: service_started
+      minio-init:
+        condition: service_completed_successfully
+      redpanda:
+        condition: service_started
+      mockserver:
+        condition: service_started
+      hive-init:
+        condition: service_completed_successfully
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail --silent http://127.0.0.1:8080/readyz > /dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  worker:
+    build:
+      context: .
+      dockerfile: apps/sdqp-worker/Dockerfile
+    environment:
+      SDQP_ENVIRONMENT: local-docker
+      SDQP_WORKER_HOST: 0.0.0.0
+      SDQP_WORKER_PORT: 8081
+      SDQP_HIVE_CONNECTION_URI: jdbc:hive2://hive-server:10000/default
+      SDQP_HIVE_PROVIDER: beeline
+      SDQP_HIVE_COMMAND: beeline
+      SDQP_HIVE_USERNAME: hive
+      SDQP_HIVE_TABLE: sdqp_fixture_employees
+      SDQP_HIVE_POLL_INTERVAL_MS: 250
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail --silent http://127.0.0.1:8081/healthz > /dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/sdqp-frontend/Dockerfile
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "4173:4173"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:4173/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+volumes:
+  postgres-data:
+  clickhouse-data:
+  minio-data:
+  hive-warehouse:
+  hive-metastore-data:

@@ -1,0 +1,122 @@
+environment = "prod-sim"
+
+[api]
+host = "0.0.0.0"
+port = 38080
+external_query_worker = true
+
+[worker]
+host = "0.0.0.0"
+port = 38081
+
+[frontend]
+title = "SDQP Prod Sim"
+port = 34173
+api_base_url = "https://sdqp-api.example.internal"
+
+[database.postgres]
+dsn = "postgres://sdqp_app:REDACTED@postgres.prod.svc:5432/sdqp"
+max_connections = 40
+
+[database.clickhouse]
+http_url = "http://clickhouse.prod.svc:8123"
+native_url = "tcp://clickhouse.prod.svc:9000"
+
+[object_store]
+endpoint = "https://s3.example.internal"
+region = "cn-test-1"
+bucket_snapshots = "sdqp-prod-snapshots"
+bucket_evidence = "sdqp-prod-evidence"
+
+[kafka]
+brokers = ["kafka-1.prod.svc:9092", "kafka-2.prod.svc:9092"]
+
+[identity_provider]
+oidc_provider = "oidc"
+saml_provider = "saml"
+scim_provider = "scim20"
+issuer_url = "https://login.example.internal/issuer"
+client_id = "sdqp-prod-client"
+redirect_url = "https://sdqp.example.internal/auth/callback"
+oidc_authorize_url = "https://login.example.internal/oidc/authorize"
+oidc_token_url = "https://login.example.internal/oidc/token"
+oidc_userinfo_url = "https://login.example.internal/oidc/userinfo"
+saml_sso_url = "https://login.example.internal/saml/sso"
+saml_exchange_url = "https://login.example.internal/saml/exchange"
+saml_entity_id = "sdqp-prod-client"
+saml_audience = "sdqp-prod-client"
+scim_base_url = "https://login.example.internal/scim"
+scim_tenant_id = "tenant-alpha"
+scim_page_size = 100
+scim_timeout_ms = 3000
+scim_retry_attempts = 2
+scim_retry_backoff_ms = 250
+scim_disable_missing_users = true
+scim_disable_missing_groups = true
+scim_delete_missing_users = false
+scim_delete_missing_groups = false
+
+[kms]
+provider = "vault"
+endpoint = "https://vault.example.internal"
+master_key_id = "sdqp-prod-master-key"
+key_ring = "sdqp-prod-ring"
+auth_token = ""
+
+[integrations]
+im_webhook_url = "https://im.example.internal/hooks/sdqp"
+
+[integrations.hr]
+base_url = "https://hr.example.internal/api"
+
+[integrations.notifications]
+feishu_webhook_url = "https://notify.example.internal/feishu"
+slack_webhook_url = "https://notify.example.internal/slack"
+email_api_url = "https://notify.example.internal/email"
+telegram_bot_api_url = "https://notify.example.internal/telegram"
+dingtalk_webhook_url = "https://notify.example.internal/dingtalk"
+retry_backoff_ms = 1000
+
+[integrations.tsa]
+provider = "rfc3161"
+base_url = "https://tsa.example.internal/api"
+authority = "tsa.example.internal"
+timeout_ms = 5000
+
+[integrations.blockchain_anchor]
+provider = "ethereum"
+base_url = "https://anchor.example.internal/api"
+network = "ethereum-sepolia"
+timeout_ms = 5000
+
+[audit.checkpoint]
+provider = "vault"
+key_id = "sdqp-prod-audit-checkpoint"
+key_version = "9"
+
+[audit.forwarder]
+enabled = true
+provider = "kafka"
+timeout_ms = 5000
+webhook_url = "https://siem.example.internal/ingest/audit"
+auth_header = "x-siem-token"
+kafka_brokers = ["kafka-1.prod.svc:9092", "kafka-2.prod.svc:9092"]
+kafka_topic = "sdqp.audit.siem"
+syslog_endpoint = "siem.example.internal:15140"
+syslog_hostname = "sdqp-prod"
+syslog_app_name = "sdqp-audit"
+
+[audit.retention]
+enabled = true
+archive_after_secs = 7776000
+archive_dir = "/var/lib/sdqp/audit-archive"
+
+[security.credential_rotation]
+enabled = true
+interval_secs = 7776000
+retry_backoff_secs = 3600
+max_attempts = 3
+manual_intervention_after_attempts = 3
+
+[observability]
+log_filter = "info,hyper=warn,tower_http=warn"

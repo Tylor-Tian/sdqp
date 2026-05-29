@@ -1,0 +1,13 @@
+{
+  "permission_grant_requests": 48,
+  "permission_grant_max_duration_ms": 8000,
+  "task_status_requests": 64,
+  "task_status_max_duration_ms": 8000,
+  "pivot_requests": 8,
+  "pivot_max_duration_ms": 8000,
+  "audit_event_requests": 24,
+  "audit_burst_max_duration_ms": 8000,
+  "audit_visibility_max_seconds": 30,
+  "ueba_denied_burst_requests": 2,
+  "ueba_visibility_max_seconds": 30
+}

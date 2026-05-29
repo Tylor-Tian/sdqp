@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package sdqp.permission.v1;
+
+message PermissionGrantRef {
+  string grant_id = 1;
+}
+
+message PermissionApplication {
+  string application_id = 1;
+  string user_id = 2;
+  string project_id = 3;
+  string data_source_id = 4;
+  repeated string fields = 5;
+}
+
+message ActiveGrant {
+  string grant_id = 1;
+  string project_id = 2;
+  string data_source_id = 3;
+  repeated string allowed_fields = 4;
+}
+
+service PermissionService {
+  rpc GetActiveGrant(PermissionGrantRef) returns (ActiveGrant);
+}

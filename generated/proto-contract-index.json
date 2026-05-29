@@ -1,0 +1,45 @@
+{
+  "contracts": [
+    {
+      "file": "common.proto",
+      "package": "sdqp.common.v1"
+    },
+    {
+      "file": "auth.proto",
+      "package": "sdqp.auth.v1"
+    },
+    {
+      "file": "query.proto",
+      "package": "sdqp.query.v1"
+    },
+    {
+      "file": "audit.proto",
+      "package": "sdqp.audit.v1"
+    },
+    {
+      "file": "project.proto",
+      "package": "sdqp.project.v1"
+    },
+    {
+      "file": "approval.proto",
+      "package": "sdqp.approval.v1"
+    },
+    {
+      "file": "permission.proto",
+      "package": "sdqp.permission.v1"
+    },
+    {
+      "file": "evidence.proto",
+      "package": "sdqp.evidence.v1"
+    },
+    {
+      "file": "watermark.proto",
+      "package": "sdqp.watermark.v1"
+    },
+    {
+      "file": "ueba.proto",
+      "package": "sdqp.ueba.v1"
+    }
+  ],
+  "version": 1
+}

@@ -1,0 +1,21 @@
+SDQP — Sensitive Data Query & Protection
+Copyright 2026 Tylor Tian
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+----------------------------------------------------------------------
+Authorship & AI collaboration
+----------------------------------------------------------------------
+The system architecture and design were authored and directed by
+Tylor Tian. The implementation was produced primarily through AI
+pair-programming (OpenAI Codex / Claude Code) under the author's
+direction and review. The author owns the design decisions and is
+responsible for the project as a whole.
+
+----------------------------------------------------------------------
+Third-party software
+----------------------------------------------------------------------
+This project depends on third-party open-source crates and packages,
+each distributed under its own license. See Cargo.toml / Cargo.lock and
+apps/sdqp-frontend/package.json for the authoritative dependency lists,
+and the respective upstream projects for their license terms.

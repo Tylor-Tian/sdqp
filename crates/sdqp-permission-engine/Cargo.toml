@@ -1,0 +1,15 @@
+[package]
+name = "sdqp-permission-engine"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+chrono.workspace = true
+sdqp-core = { path = "../sdqp-core" }
+sdqp-datasource-adapter = { path = "../sdqp-datasource-adapter" }
+serde.workspace = true
+thiserror.workspace = true
+ulid.workspace = true

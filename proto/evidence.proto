@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package sdqp.evidence.v1;
+
+message EvidenceTaskRef {
+  string task_id = 1;
+}
+
+message EvidenceExportRequest {
+  string snapshot_id = 1;
+  string template = 2;
+  string export_body = 3;
+}
+
+message EvidenceExportResponse {
+  string task_id = 1;
+  string status = 2;
+  bool verified = 3;
+  string package_id = 4;
+  string snapshot_id = 5;
+  string template = 6;
+  string jurisdiction = 7;
+  string watermark_token = 8;
+  string watermark_text = 9;
+  string exported_document = 10;
+  uint32 audit_event_count = 11;
+  bool audit_chain_valid = 12;
+  string hash_chain_digest = 13;
+  string timestamp_provider = 14;
+  string timestamp_authority = 15;
+  string timestamp_token = 16;
+  string anchor_provider = 17;
+  string anchor_status = 18;
+  string anchor_network = 19;
+  string anchor_transaction_id = 20;
+  uint64 anchor_block_number = 21;
+  string anchor_confirmed_at = 22;
+  string recipient_user_id = 23;
+  string data_payload_kms_provider = 24;
+  string data_payload_dek_id = 25;
+  string data_payload_scope_binding = 26;
+  uint32 audit_extract_event_count = 27;
+  string certificate_title = 28;
+  string certificate_issued_at = 29;
+  string manifest_digest = 30;
+  bool verification_ready = 31;
+  string file_name = 32;
+  string media_type = 33;
+  bool download_ready = 34;
+  string created_at = 35;
+  string completed_at = 36;
+}
+
+message ExportDownloadAuthorizationRequest {
+  string task_id = 1;
+  int64 ttl_seconds = 2;
+}
+
+message ExportDownloadAuthorizationResponse {
+  string task_id = 1;
+  string download_token = 2;
+  string file_name = 3;
+  string media_type = 4;
+  string expires_at = 5;
+}
+
+service EvidenceService {
+  rpc ExportEvidence(EvidenceExportRequest) returns (EvidenceExportResponse);
+  rpc GetExportTask(EvidenceTaskRef) returns (EvidenceExportResponse);
+  rpc RefreshAnchor(EvidenceTaskRef) returns (EvidenceExportResponse);
+  rpc AuthorizeDownload(ExportDownloadAuthorizationRequest) returns (ExportDownloadAuthorizationResponse);
+}

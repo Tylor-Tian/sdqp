@@ -1,0 +1,10 @@
+{
+  "refresh_token": "replace-with-runtime-refresh-token",
+  "profile": "legacy",
+  "ip_drift": false,
+  "impossible_travel": false,
+  "exfiltration_hint": false,
+  "query_burst": 5,
+  "denied_burst": 0,
+  "export_burst": 0
+}

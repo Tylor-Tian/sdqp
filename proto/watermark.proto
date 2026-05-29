@@ -1,0 +1,180 @@
+syntax = "proto3";
+
+package sdqp.watermark.v1;
+
+enum WatermarkContentFormat {
+  WATERMARK_CONTENT_FORMAT_UNSPECIFIED = 0;
+  WATERMARK_CONTENT_FORMAT_TEXT = 1;
+  WATERMARK_CONTENT_FORMAT_PDF = 2;
+  WATERMARK_CONTENT_FORMAT_OFFICE = 3;
+  WATERMARK_CONTENT_FORMAT_IMAGE = 4;
+  WATERMARK_CONTENT_FORMAT_BINARY = 5;
+}
+
+enum WatermarkImplementationTier {
+  WATERMARK_IMPLEMENTATION_TIER_UNSPECIFIED = 0;
+  WATERMARK_IMPLEMENTATION_TIER_ALGORITHM = 1;
+  WATERMARK_IMPLEMENTATION_TIER_CARRIER = 2;
+  WATERMARK_IMPLEMENTATION_TIER_LEGACY = 3;
+}
+
+enum DlpDisposition {
+  DLP_DISPOSITION_UNSPECIFIED = 0;
+  DLP_DISPOSITION_NO_WATERMARK = 1;
+  DLP_DISPOSITION_WATERMARK_VERIFIED = 2;
+  DLP_DISPOSITION_WATERMARK_UNVERIFIED = 3;
+  DLP_DISPOSITION_EXPECTED_TOKEN_MISMATCH = 4;
+}
+
+enum DlpAction {
+  DLP_ACTION_UNSPECIFIED = 0;
+  DLP_ACTION_ALLOW = 1;
+  DLP_ACTION_ALERT = 2;
+  DLP_ACTION_QUARANTINE = 3;
+  DLP_ACTION_BLOCK = 4;
+  DLP_ACTION_ESCALATE = 5;
+}
+
+enum DlpProviderKind {
+  DLP_PROVIDER_KIND_UNSPECIFIED = 0;
+  DLP_PROVIDER_KIND_LOCAL_POLICY = 1;
+  DLP_PROVIDER_KIND_WEBHOOK = 2;
+}
+
+message WatermarkRequestScope {
+  string tenant_id = 1;
+  string project_id = 2;
+  string user_id = 3;
+}
+
+message DlpInspectionContext {
+  string caller_system = 1;
+  string policy_id = 2;
+  string source_uri = 3;
+  string correlation_id = 4;
+  WatermarkRequestScope scope = 5;
+  map<string, string> attributes = 6;
+}
+
+message WatermarkDocument {
+  string document_id = 1;
+  bytes content = 2;
+  WatermarkContentFormat content_format = 3;
+  string media_type = 4;
+  DlpInspectionContext inspection_context = 5;
+}
+
+message WatermarkPayloadView {
+  string tenant_id = 1;
+  string project_id = 2;
+  string user_id = 3;
+  uint64 sequence_number = 4;
+  string issued_at = 5;
+  string snapshot_id = 6;
+}
+
+message WatermarkMatch {
+  string token = 1;
+  bool verified = 2;
+  string overlay_text = 3;
+  string provider = 4;
+  string algorithm = 5;
+  WatermarkImplementationTier implementation_tier = 6;
+  WatermarkContentFormat content_format = 7;
+  uint32 confidence_percent = 8;
+  WatermarkPayloadView payload = 9;
+}
+
+message WatermarkDetectionSummary {
+  bool watermark_present = 1;
+  bool verified = 2;
+  bool algorithm_verified = 3;
+  uint32 match_count = 4;
+  uint32 algorithm_match_count = 5;
+  uint32 carrier_match_count = 6;
+  uint32 legacy_match_count = 7;
+  bool expected_token_matched = 8;
+}
+
+message DetectWatermarksRequest {
+  WatermarkDocument document = 1;
+  bool include_payload = 2;
+}
+
+message DetectWatermarksResponse {
+  string scan_id = 1;
+  string document_id = 2;
+  DlpInspectionContext inspection_context = 3;
+  repeated WatermarkMatch matches = 4;
+  WatermarkDetectionSummary summary = 5;
+  DlpDisposition disposition = 6;
+}
+
+message VerifyWatermarkRequest {
+  WatermarkDocument document = 1;
+  string expected_token = 2;
+  bool include_payload = 3;
+}
+
+message VerifyWatermarkResponse {
+  string scan_id = 1;
+  string document_id = 2;
+  DlpInspectionContext inspection_context = 3;
+  repeated WatermarkMatch matches = 4;
+  WatermarkDetectionSummary summary = 5;
+  DlpDisposition disposition = 6;
+}
+
+message BatchScanRequest {
+  repeated WatermarkDocument documents = 1;
+  bool include_payload = 2;
+}
+
+message BatchScanResponse {
+  repeated DetectWatermarksResponse reports = 1;
+  WatermarkDetectionSummary aggregate_summary = 2;
+}
+
+message DlpProviderConfig {
+  string provider_id = 1;
+  DlpProviderKind provider_kind = 2;
+  string webhook_url = 3;
+  string auth_header = 4;
+  string auth_token = 5;
+  uint32 timeout_ms = 6;
+  map<string, string> attributes = 7;
+  DlpAction default_action = 8;
+}
+
+message DlpPolicyEvaluationRequest {
+  WatermarkDocument document = 1;
+  bool include_payload = 2;
+  string expected_token = 3;
+  DlpProviderConfig provider_config = 4;
+}
+
+message DlpPolicyDecision {
+  string provider_id = 1;
+  DlpProviderKind provider_kind = 2;
+  string policy_id = 3;
+  string policy_version = 4;
+  DlpDisposition disposition = 5;
+  DlpAction action = 6;
+  bool callback_delivered = 7;
+  bool enforcement_required = 8;
+  repeated string reasons = 9;
+  map<string, string> attributes = 10;
+  uint32 enforcement_ttl_seconds = 11;
+}
+
+message DlpPolicyEvaluationResponse {
+  DetectWatermarksResponse detection = 1;
+  DlpPolicyDecision decision = 2;
+}
+
+service WatermarkDetectionService {
+  rpc DetectWatermarks(DetectWatermarksRequest) returns (DetectWatermarksResponse);
+  rpc VerifyWatermark(VerifyWatermarkRequest) returns (VerifyWatermarkResponse);
+  rpc BatchScan(BatchScanRequest) returns (BatchScanResponse);
+  rpc EvaluateDlpPolicy(DlpPolicyEvaluationRequest) returns (DlpPolicyEvaluationResponse);
+}

@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package sdqp.common.v1;
+
+message HealthRequest {}
+
+message HealthResponse {
+  string service = 1;
+  string status = 2;
+  string phase = 3;
+  map<string, string> details = 4;
+}
+
+message RequestScope {
+  string tenant_id = 1;
+  string project_id = 2;
+  string user_id = 3;
+}
+
+message PageRequest {
+  uint32 page_size = 1;
+  string cursor = 2;
+}

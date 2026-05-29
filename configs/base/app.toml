@@ -1,0 +1,120 @@
+environment = "dev"
+
+[api]
+host = "127.0.0.1"
+port = 8080
+service_name = "sdqp-api"
+external_query_worker = false
+
+[worker]
+host = "127.0.0.1"
+port = 8081
+service_name = "sdqp-worker"
+query_poll_interval_ms = 50
+query_lease_secs = 30
+query_max_attempts = 2
+
+[frontend]
+title = "SDQP Phase 0"
+port = 4173
+api_base_url = "http://127.0.0.1:8080"
+
+[database.postgres]
+dsn = "postgres://sdqp:sdqp@127.0.0.1:5432/sdqp"
+max_connections = 20
+
+[database.clickhouse]
+http_url = "http://127.0.0.1:8123"
+native_url = "tcp://127.0.0.1:9000"
+
+[object_store]
+endpoint = "http://127.0.0.1:9002"
+region = "local"
+access_key = "minio"
+secret_key = "minio123"
+bucket_snapshots = "sdqp-snapshots"
+bucket_evidence = "sdqp-evidence"
+
+[kafka]
+brokers = ["127.0.0.1:9092"]
+audit_topic = "sdqp.audit.events"
+query_topic = "sdqp.query.tasks"
+ueba_topic = "sdqp.ueba.events"
+
+[identity_provider]
+oidc_provider = "mock"
+saml_provider = "mock"
+scim_provider = "mock"
+issuer_url = "https://mock-idp.local/issuer"
+client_id = "sdqp-dev-client"
+client_secret = "dev-client-secret"
+redirect_url = "http://127.0.0.1:4173/auth/callback"
+oidc_authorize_url = "https://mock-idp.local/issuer/authorize"
+oidc_token_url = "https://mock-idp.local/issuer/token"
+oidc_userinfo_url = "https://mock-idp.local/issuer/userinfo"
+saml_sso_url = "https://mock-idp.local/issuer/saml/sso"
+saml_exchange_url = "https://mock-idp.local/issuer/saml/exchange"
+saml_entity_id = "sdqp-dev-client"
+saml_audience = "sdqp-dev-client"
+scim_base_url = "https://mock-idp.local/scim"
+scim_token = "dev-scim-token"
+scim_tenant_id = "tenant-alpha"
+scim_page_size = 100
+scim_timeout_ms = 3000
+scim_retry_attempts = 2
+scim_retry_backoff_ms = 250
+scim_disable_missing_users = true
+scim_disable_missing_groups = true
+scim_delete_missing_users = false
+scim_delete_missing_groups = false
+
+[kms]
+provider = "mock"
+endpoint = "http://127.0.0.1:8200"
+master_key_id = "sdqp-dev-master-key"
+key_ring = "sdqp-dev-ring"
+auth_token = ""
+region = "local"
+key_version = "1"
+
+[integrations]
+im_webhook_url = "http://127.0.0.1:11080/im/webhook"
+
+[integrations.hr]
+base_url = "http://127.0.0.1:11080/hr"
+token = "dev-hr-token"
+
+[integrations.notifications]
+feishu_webhook_url = "http://127.0.0.1:11080/notify/feishu"
+slack_webhook_url = "http://127.0.0.1:11080/notify/slack"
+email_api_url = "http://127.0.0.1:11080/notify/email"
+telegram_bot_api_url = "http://127.0.0.1:11080/notify/telegram"
+dingtalk_webhook_url = "http://127.0.0.1:11080/notify/dingtalk"
+retry_backoff_ms = 250
+
+[integrations.tsa]
+provider = "mock"
+base_url = "http://127.0.0.1:11080/tsa"
+api_key = "dev-tsa-key"
+authority = "mock-tsa"
+timeout_ms = 3000
+
+[integrations.blockchain_anchor]
+provider = "mock"
+base_url = "http://127.0.0.1:11080/anchor"
+api_key = "dev-anchor-key"
+network = "mock-chain"
+timeout_ms = 3000
+
+[security.credential_rotation]
+enabled = true
+interval_secs = 7776000
+retry_backoff_secs = 3600
+max_attempts = 3
+manual_intervention_after_attempts = 3
+
+[observability]
+log_filter = "info,sdqp_api=info,sdqp_worker=info"
+metrics_path = "/metrics"
+request_id_header = "x-request-id"
+span_id_header = "x-sdqp-span-id"

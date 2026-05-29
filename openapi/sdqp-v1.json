@@ -1,0 +1,2252 @@
+{
+  "components": {
+    "schemas": {
+      "AnalysisResponseFormat": {
+        "enum": [
+          "json",
+          "arrow_ipc"
+        ],
+        "type": "string"
+      },
+      "AnalysisTemplateConfig": {
+        "properties": {
+          "detail_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "page_size": {
+            "minimum": 1,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "pivot_dimension": {
+            "type": "string"
+          },
+          "pivot_metric": {
+            "enum": [
+              "record_count",
+              "count_distinct",
+              "sum",
+              "avg",
+              "min",
+              "max",
+              "median",
+              "percentile"
+            ],
+            "type": "string"
+          },
+          "pivot_metric_field": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "pivot_percentile": {
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "detail_fields",
+          "pivot_dimension",
+          "pivot_metric"
+        ],
+        "type": "object"
+      },
+      "AnalysisTemplateDeleteResponse": {
+        "properties": {
+          "deleted": {
+            "type": "boolean"
+          },
+          "template_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "template_id",
+          "deleted"
+        ],
+        "type": "object"
+      },
+      "AnalysisTemplateListResponse": {
+        "properties": {
+          "templates": {
+            "items": {
+              "$ref": "#/components/schemas/AnalysisTemplateResponse"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "templates"
+        ],
+        "type": "object"
+      },
+      "AnalysisTemplateResponse": {
+        "properties": {
+          "config": {
+            "$ref": "#/components/schemas/AnalysisTemplateConfig"
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "data_source_id": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "editable": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          },
+          "owner_user_id": {
+            "type": "string"
+          },
+          "published_at": {
+            "format": "date-time",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "template_id": {
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "visibility": {
+            "$ref": "#/components/schemas/AnalysisTemplateVisibility"
+          }
+        },
+        "required": [
+          "template_id",
+          "name",
+          "data_source_id",
+          "visibility",
+          "owner_user_id",
+          "editable",
+          "created_at",
+          "updated_at",
+          "config"
+        ],
+        "type": "object"
+      },
+      "AnalysisTemplateUpsertRequest": {
+        "properties": {
+          "config": {
+            "$ref": "#/components/schemas/AnalysisTemplateConfig"
+          },
+          "data_source_id": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "data_source_id",
+          "config"
+        ],
+        "type": "object"
+      },
+      "AnalysisTemplateVisibility": {
+        "enum": [
+          "private",
+          "published"
+        ],
+        "type": "string"
+      },
+      "ClassificationCatalogEntry": {
+        "properties": {
+          "applicable_regulations": {
+            "items": {
+              "$ref": "#/components/schemas/RegulationReference"
+            },
+            "type": "array"
+          },
+          "catalog_entry_id": {
+            "type": "string"
+          },
+          "data_category": {
+            "enum": [
+              "public_reference",
+              "internal_operational",
+              "personal_contact",
+              "personal_identifier",
+              "financial_identifier",
+              "investigation_sensitive",
+              "general_confidential"
+            ],
+            "type": "string"
+          },
+          "level": {
+            "type": "string"
+          },
+          "manual_confirmation_required": {
+            "type": "boolean"
+          },
+          "retention_policy": {
+            "$ref": "#/components/schemas/RetentionPolicy"
+          },
+          "rule_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "catalog_entry_id",
+          "data_category",
+          "level",
+          "applicable_regulations",
+          "retention_policy",
+          "manual_confirmation_required",
+          "rule_ids"
+        ],
+        "type": "object"
+      },
+      "ClassificationCatalogResponse": {
+        "properties": {
+          "active_rule_version_id": {
+            "type": "string"
+          },
+          "data_source_id": {
+            "type": "string"
+          },
+          "entries": {
+            "items": {
+              "$ref": "#/components/schemas/ClassificationCatalogEntry"
+            },
+            "type": "array"
+          },
+          "project_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "project_id",
+          "data_source_id",
+          "active_rule_version_id",
+          "entries"
+        ],
+        "type": "object"
+      },
+      "ClassificationPoliciesResponse": {
+        "properties": {
+          "data_source_id": {
+            "type": "string"
+          },
+          "policies": {
+            "items": {
+              "$ref": "#/components/schemas/ClassificationPolicyResponse"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "data_source_id",
+          "policies"
+        ],
+        "type": "object"
+      },
+      "ClassificationPolicyResponse": {
+        "properties": {
+          "applicable_regulations": {
+            "items": {
+              "$ref": "#/components/schemas/RegulationReference"
+            },
+            "type": "array"
+          },
+          "catalog_entry_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "data_category": {
+            "type": "string"
+          },
+          "detection_run_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "field_name": {
+            "type": "string"
+          },
+          "level": {
+            "type": "string"
+          },
+          "manual_confirmation_required": {
+            "type": "boolean"
+          },
+          "masking_strategy": {
+            "type": "string"
+          },
+          "retention_policy": {
+            "$ref": "#/components/schemas/RetentionPolicy"
+          },
+          "rule_version_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "sample_value": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source": {
+            "enum": [
+              "rule_engine",
+              "sample_detection",
+              "manual_confirmation"
+            ],
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "pending_confirmation",
+              "confirmed"
+            ],
+            "type": "string"
+          },
+          "watermark_strength": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "field_name",
+          "level",
+          "data_category",
+          "status",
+          "masking_strategy",
+          "watermark_strength",
+          "source",
+          "applicable_regulations",
+          "retention_policy",
+          "manual_confirmation_required"
+        ],
+        "type": "object"
+      },
+      "ClassificationRule": {
+        "properties": {
+          "applicable_regulations": {
+            "items": {
+              "$ref": "#/components/schemas/RegulationReference"
+            },
+            "type": "array"
+          },
+          "catalog_entry_id": {
+            "type": "string"
+          },
+          "data_category": {
+            "type": "string"
+          },
+          "field_matchers": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "level": {
+            "enum": [
+              "L1Public",
+              "L2Internal",
+              "L3Confidential",
+              "L4Sensitive",
+              "L5Restricted"
+            ],
+            "type": "string"
+          },
+          "manual_confirmation_required": {
+            "type": "boolean"
+          },
+          "masking_strategy": {
+            "enum": [
+              "None",
+              "PartialEmail",
+              "PartialPhone",
+              "Full"
+            ],
+            "type": "string"
+          },
+          "retention_policy": {
+            "$ref": "#/components/schemas/RetentionPolicy"
+          },
+          "rule_id": {
+            "type": "string"
+          },
+          "sample_patterns": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "watermark_strength": {
+            "enum": [
+              "Low",
+              "Medium",
+              "High",
+              "Critical"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "rule_id",
+          "field_matchers",
+          "sample_patterns",
+          "level",
+          "masking_strategy",
+          "watermark_strength"
+        ],
+        "type": "object"
+      },
+      "ClassificationRuleVersionResponse": {
+        "properties": {
+          "catalog_entries": {
+            "items": {
+              "$ref": "#/components/schemas/ClassificationCatalogEntry"
+            },
+            "type": "array"
+          },
+          "data_source_id": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "rule_version_id": {
+            "type": "string"
+          },
+          "rules": {
+            "items": {
+              "$ref": "#/components/schemas/ClassificationRule"
+            },
+            "type": "array"
+          },
+          "status": {
+            "enum": [
+              "draft",
+              "active",
+              "retired"
+            ],
+            "type": "string"
+          },
+          "version_number": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "rule_version_id",
+          "project_id",
+          "data_source_id",
+          "version_number",
+          "status",
+          "rules",
+          "catalog_entries"
+        ],
+        "type": "object"
+      },
+      "ClassificationRuleVersionsResponse": {
+        "properties": {
+          "active_rule_version_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "data_source_id": {
+            "type": "string"
+          },
+          "versions": {
+            "items": {
+              "$ref": "#/components/schemas/ClassificationRuleVersionResponse"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "data_source_id",
+          "versions"
+        ],
+        "type": "object"
+      },
+      "ConfirmClassificationRequest": {
+        "properties": {
+          "fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "reviewer_note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "rule_version_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "fields"
+        ],
+        "type": "object"
+      },
+      "CreateClassificationRuleVersionRequest": {
+        "properties": {
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "rules": {
+            "items": {
+              "$ref": "#/components/schemas/ClassificationRule"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "rules"
+        ],
+        "type": "object"
+      },
+      "DlpDetectionSummary": {
+        "properties": {
+          "algorithm_match_count": {
+            "type": "integer"
+          },
+          "algorithm_verified": {
+            "type": "boolean"
+          },
+          "carrier_match_count": {
+            "type": "integer"
+          },
+          "expected_token_matched": {
+            "type": "boolean"
+          },
+          "legacy_match_count": {
+            "type": "integer"
+          },
+          "match_count": {
+            "type": "integer"
+          },
+          "verified": {
+            "type": "boolean"
+          },
+          "watermark_present": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "watermark_present",
+          "verified",
+          "algorithm_verified",
+          "match_count",
+          "algorithm_match_count",
+          "carrier_match_count",
+          "legacy_match_count",
+          "expected_token_matched"
+        ],
+        "type": "object"
+      },
+      "DlpInspectionContext": {
+        "properties": {
+          "attributes": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "caller_system": {
+            "type": "string"
+          },
+          "correlation_id": {
+            "type": "string"
+          },
+          "policy_id": {
+            "type": "string"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/DlpRequestScope"
+          },
+          "source_uri": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "caller_system",
+          "policy_id",
+          "source_uri",
+          "correlation_id"
+        ],
+        "type": "object"
+      },
+      "DlpPolicyDecision": {
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "attributes": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "callback_delivered": {
+            "type": "boolean"
+          },
+          "disposition": {
+            "type": "string"
+          },
+          "enforcement_required": {
+            "type": "boolean"
+          },
+          "enforcement_ttl_seconds": {
+            "type": "integer"
+          },
+          "policy_id": {
+            "type": "string"
+          },
+          "policy_version": {
+            "type": "string"
+          },
+          "provider_id": {
+            "type": "string"
+          },
+          "provider_kind": {
+            "type": "string"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "provider_id",
+          "provider_kind",
+          "policy_id",
+          "policy_version",
+          "disposition",
+          "action",
+          "callback_delivered",
+          "enforcement_required",
+          "reasons",
+          "attributes",
+          "enforcement_ttl_seconds"
+        ],
+        "type": "object"
+      },
+      "DlpPolicyEvaluateRequest": {
+        "properties": {
+          "content": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "content_base64": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "content_format": {
+            "enum": [
+              "text",
+              "pdf",
+              "office",
+              "image",
+              "binary"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "document_id": {
+            "type": "string"
+          },
+          "expected_token": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "include_payload": {
+            "type": "boolean"
+          },
+          "inspection_context": {
+            "$ref": "#/components/schemas/DlpInspectionContext"
+          },
+          "media_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "provider_config": {
+            "$ref": "#/components/schemas/DlpProviderConfig"
+          }
+        },
+        "required": [
+          "document_id",
+          "inspection_context"
+        ],
+        "type": "object"
+      },
+      "DlpPolicyEvaluateResponse": {
+        "properties": {
+          "decision": {
+            "$ref": "#/components/schemas/DlpPolicyDecision"
+          },
+          "disposition": {
+            "type": "string"
+          },
+          "document_id": {
+            "type": "string"
+          },
+          "inspection_context": {
+            "$ref": "#/components/schemas/DlpInspectionContext"
+          },
+          "matches": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "scan_id": {
+            "type": "string"
+          },
+          "summary": {
+            "$ref": "#/components/schemas/DlpDetectionSummary"
+          }
+        },
+        "required": [
+          "scan_id",
+          "document_id",
+          "inspection_context",
+          "matches",
+          "disposition",
+          "decision"
+        ],
+        "type": "object"
+      },
+      "DlpProviderConfig": {
+        "properties": {
+          "attributes": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "auth_header": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "auth_token": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "default_action": {
+            "enum": [
+              "allow",
+              "alert",
+              "quarantine",
+              "block",
+              "escalate",
+              "unspecified"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "provider_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "provider_kind": {
+            "enum": [
+              "local-policy",
+              "webhook"
+            ],
+            "type": "string"
+          },
+          "timeout_ms": {
+            "minimum": 1,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "webhook_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "provider_kind"
+        ],
+        "type": "object"
+      },
+      "DlpRequestScope": {
+        "properties": {
+          "project_id": {
+            "type": "string"
+          },
+          "tenant_id": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "tenant_id",
+          "project_id",
+          "user_id"
+        ],
+        "type": "object"
+      },
+      "EvidenceExportRequest": {
+        "properties": {
+          "export_body": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "snapshot_id": {
+            "type": "string"
+          },
+          "template": {
+            "$ref": "#/components/schemas/EvidenceTemplate"
+          }
+        },
+        "required": [
+          "snapshot_id",
+          "template"
+        ],
+        "type": "object"
+      },
+      "EvidenceExportResponse": {
+        "properties": {
+          "anchor_block_number": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "anchor_confirmed_at": {
+            "format": "date-time",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "anchor_failure_reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "anchor_network": {
+            "type": "string"
+          },
+          "anchor_provider": {
+            "type": "string"
+          },
+          "anchor_runtime_mode": {
+            "enum": [
+              "mock",
+              "repo_local",
+              "external",
+              "unknown"
+            ],
+            "type": "string"
+          },
+          "anchor_status": {
+            "enum": [
+              "pending",
+              "confirmed",
+              "failed"
+            ],
+            "type": "string"
+          },
+          "anchor_transaction_id": {
+            "type": "string"
+          },
+          "audit_chain_valid": {
+            "type": "boolean"
+          },
+          "audit_event_count": {
+            "type": "integer"
+          },
+          "audit_extract_event_count": {
+            "type": "integer"
+          },
+          "certificate_issued_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "certificate_title": {
+            "type": "string"
+          },
+          "completed_at": {
+            "format": "date-time",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "data_payload_dek_id": {
+            "type": "string"
+          },
+          "data_payload_kms_provider": {
+            "type": "string"
+          },
+          "data_payload_scope_binding": {
+            "type": "string"
+          },
+          "download_ready": {
+            "type": "boolean"
+          },
+          "exported_document": {
+            "type": "string"
+          },
+          "external_final_uat_required": {
+            "type": "boolean"
+          },
+          "failure_reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "file_name": {
+            "type": "string"
+          },
+          "hash_chain_digest": {
+            "type": "string"
+          },
+          "integrity_verified": {
+            "type": "boolean"
+          },
+          "jurisdiction": {
+            "type": "string"
+          },
+          "last_anchor_refresh_at": {
+            "format": "date-time",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "manifest_digest": {
+            "type": "string"
+          },
+          "media_type": {
+            "type": "string"
+          },
+          "mock_provider_components": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "package_id": {
+            "type": "string"
+          },
+          "provider_runtime_mode": {
+            "enum": [
+              "mock",
+              "repo_local",
+              "external",
+              "unknown"
+            ],
+            "type": "string"
+          },
+          "recipient_user_id": {
+            "type": "string"
+          },
+          "refresh_recommended": {
+            "type": "boolean"
+          },
+          "snapshot_id": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/EvidenceTaskStatus"
+          },
+          "task_id": {
+            "type": "string"
+          },
+          "template": {
+            "$ref": "#/components/schemas/EvidenceTemplate"
+          },
+          "timestamp_authority": {
+            "type": "string"
+          },
+          "timestamp_provider": {
+            "type": "string"
+          },
+          "timestamp_runtime_mode": {
+            "enum": [
+              "mock",
+              "repo_local",
+              "external",
+              "unknown"
+            ],
+            "type": "string"
+          },
+          "timestamp_token": {
+            "type": "string"
+          },
+          "verification_ready": {
+            "type": "boolean"
+          },
+          "verification_status": {
+            "$ref": "#/components/schemas/EvidenceVerificationStatus"
+          },
+          "verified": {
+            "type": "boolean"
+          },
+          "watermark_text": {
+            "type": "string"
+          },
+          "watermark_token": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "task_id",
+          "status",
+          "verified",
+          "integrity_verified",
+          "verification_status",
+          "package_id",
+          "snapshot_id",
+          "template",
+          "jurisdiction",
+          "watermark_token",
+          "audit_chain_valid",
+          "hash_chain_digest",
+          "timestamp_provider",
+          "timestamp_runtime_mode",
+          "anchor_provider",
+          "anchor_runtime_mode",
+          "anchor_status",
+          "anchor_network",
+          "provider_runtime_mode",
+          "external_final_uat_required",
+          "refresh_recommended",
+          "recipient_user_id",
+          "manifest_digest",
+          "verification_ready",
+          "download_ready",
+          "created_at"
+        ],
+        "type": "object"
+      },
+      "EvidenceTaskStatus": {
+        "enum": [
+          "completed",
+          "pending_anchor",
+          "failed_anchor",
+          "failed"
+        ],
+        "type": "string"
+      },
+      "EvidenceTemplate": {
+        "enum": [
+          "china-judicial",
+          "eu-regulatory",
+          "us-litigation"
+        ],
+        "type": "string"
+      },
+      "EvidenceVerificationStatus": {
+        "enum": [
+          "verified",
+          "pending_anchor",
+          "failed_anchor",
+          "invalid"
+        ],
+        "type": "string"
+      },
+      "ExportDownloadAuthorizationRequest": {
+        "properties": {
+          "ttl_seconds": {
+            "maximum": 3600,
+            "minimum": 60,
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "type": "object"
+      },
+      "ExportDownloadAuthorizationResponse": {
+        "properties": {
+          "download_token": {
+            "type": "string"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "file_name": {
+            "type": "string"
+          },
+          "media_type": {
+            "type": "string"
+          },
+          "task_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "task_id",
+          "download_token",
+          "file_name",
+          "media_type",
+          "expires_at"
+        ],
+        "type": "object"
+      },
+      "FieldDisplayPolicyResponse": {
+        "properties": {
+          "field_name": {
+            "type": "string"
+          },
+          "masked": {
+            "type": "boolean"
+          },
+          "render_mode": {
+            "type": "string"
+          },
+          "watermark_strength": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "field_name",
+          "masked",
+          "render_mode",
+          "watermark_strength"
+        ],
+        "type": "object"
+      },
+      "PivotAnalysisRequest": {
+        "properties": {
+          "dimension": {
+            "type": "string"
+          },
+          "metric": {
+            "enum": [
+              "record_count",
+              "count_distinct",
+              "sum",
+              "avg",
+              "min",
+              "max",
+              "median",
+              "percentile"
+            ],
+            "type": "string"
+          },
+          "metric_field": {
+            "type": "string"
+          },
+          "percentile": {
+            "type": "number"
+          },
+          "response_format": {
+            "$ref": "#/components/schemas/AnalysisResponseFormat"
+          },
+          "snapshot_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "snapshot_id",
+          "dimension"
+        ],
+        "type": "object"
+      },
+      "PivotAnalysisResponse": {
+        "properties": {
+          "buckets": {
+            "items": {
+              "$ref": "#/components/schemas/PivotBucket"
+            },
+            "type": "array"
+          },
+          "dimension": {
+            "type": "string"
+          },
+          "metric": {
+            "type": "string"
+          },
+          "metric_field": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "percentile": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "snapshot_id": {
+            "type": "string"
+          },
+          "watermark_text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "snapshot_id",
+          "dimension",
+          "metric",
+          "buckets",
+          "watermark_text"
+        ],
+        "type": "object"
+      },
+      "PivotBucket": {
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object"
+      },
+      "RegulationReference": {
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "jurisdiction": {
+            "type": "string"
+          },
+          "retention_basis": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "jurisdiction",
+          "title",
+          "retention_basis"
+        ],
+        "type": "object"
+      },
+      "RetentionPolicy": {
+        "properties": {
+          "disposal_action": {
+            "enum": [
+              "review",
+              "archive",
+              "purge",
+              "Review",
+              "Archive",
+              "Purge"
+            ],
+            "type": "string"
+          },
+          "legal_hold_supported": {
+            "type": "boolean"
+          },
+          "policy_id": {
+            "type": "string"
+          },
+          "retain_for_days": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "policy_id",
+          "retain_for_days",
+          "disposal_action",
+          "legal_hold_supported"
+        ],
+        "type": "object"
+      },
+      "ServiceHealth": {
+        "properties": {
+          "details": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "phase": {
+            "type": "string"
+          },
+          "service": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "service",
+          "status",
+          "phase",
+          "details"
+        ],
+        "type": "object"
+      },
+      "SnapshotPageResponse": {
+        "properties": {
+          "columns": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "field_policies": {
+            "items": {
+              "$ref": "#/components/schemas/FieldDisplayPolicyResponse"
+            },
+            "type": "array"
+          },
+          "next_cursor": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "rows": {
+            "items": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "snapshot_id": {
+            "type": "string"
+          },
+          "watermark_text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "snapshot_id",
+          "columns",
+          "rows",
+          "field_policies",
+          "watermark_text"
+        ],
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "Phase 2 generated REST contract snapshot for the SDQP local verification stack.",
+    "title": "SDQP REST API",
+    "version": "v1"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/auth/device-posture": {
+      "post": {
+        "operationId": "reportDevicePosture",
+        "responses": {
+          "200": {
+            "description": "Continuous authentication risk evaluation"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "login",
+        "responses": {
+          "200": {
+            "description": "Pending MFA session issued"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "operationId": "logout",
+        "responses": {
+          "200": {
+            "description": "Refresh token revoked"
+          }
+        }
+      }
+    },
+    "/auth/mfa/verify": {
+      "post": {
+        "operationId": "verifyMfa",
+        "responses": {
+          "200": {
+            "description": "Token pair issued"
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "operationId": "refreshToken",
+        "responses": {
+          "200": {
+            "description": "Refreshed access token"
+          }
+        }
+      }
+    },
+    "/auth/scim/groups": {
+      "post": {
+        "operationId": "syncScimGroup",
+        "responses": {
+          "200": {
+            "description": "SCIM group synchronization accepted"
+          }
+        }
+      }
+    },
+    "/auth/scim/sync": {
+      "post": {
+        "operationId": "runScimProviderSync",
+        "responses": {
+          "200": {
+            "description": "SCIM provider pull synchronization completed with lifecycle plan and cursor"
+          }
+        }
+      }
+    },
+    "/auth/scim/users": {
+      "post": {
+        "operationId": "syncScimUser",
+        "responses": {
+          "200": {
+            "description": "SCIM user synchronization accepted"
+          }
+        }
+      }
+    },
+    "/auth/sso/callback": {
+      "post": {
+        "operationId": "completeSso",
+        "responses": {
+          "200": {
+            "description": "SSO callback converted into pending MFA session"
+          }
+        }
+      }
+    },
+    "/auth/sso/start": {
+      "post": {
+        "operationId": "startSso",
+        "responses": {
+          "200": {
+            "description": "Mock SSO authorization initiated"
+          }
+        }
+      }
+    },
+    "/auth/step-up/verify": {
+      "post": {
+        "operationId": "verifyStepUp",
+        "responses": {
+          "200": {
+            "description": "Step-up verification cleared and tokens re-issued"
+          }
+        }
+      }
+    },
+    "/healthz": {
+      "get": {
+        "operationId": "healthCheck",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceHealth"
+                }
+              }
+            },
+            "description": "Service health payload"
+          }
+        }
+      }
+    },
+    "/metrics": {
+      "get": {
+        "operationId": "metricsSnapshot",
+        "responses": {
+          "200": {
+            "description": "Prometheus metrics text output"
+          }
+        }
+      }
+    },
+    "/readyz": {
+      "get": {
+        "operationId": "readinessCheck",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceHealth"
+                }
+              }
+            },
+            "description": "Service readiness payload"
+          }
+        }
+      }
+    },
+    "/v1/admin/config-drift": {
+      "get": {
+        "operationId": "configDrift",
+        "responses": {
+          "200": {
+            "description": "Config drift report"
+          }
+        }
+      }
+    },
+    "/v1/admin/credential-rotations": {
+      "get": {
+        "operationId": "listCredentialRotationStates",
+        "responses": {
+          "200": {
+            "description": "Credential rotation policy/state view including last and next due timestamps"
+          }
+        }
+      }
+    },
+    "/v1/admin/credential-rotations/run": {
+      "post": {
+        "operationId": "runCredentialRotation",
+        "responses": {
+          "200": {
+            "description": "Runs due credential rotation automation for repo-local integration credentials and records audit events"
+          }
+        }
+      }
+    },
+    "/v1/analysis/pivot": {
+      "post": {
+        "operationId": "pivotAnalysis",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PivotAnalysisRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PivotAnalysisResponse"
+                }
+              },
+              "application/vnd.apache.arrow.stream": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Pivot analysis response",
+            "headers": {
+              "x-sdqp-response-meta": {
+                "description": "Base64-encoded JSON metadata for Arrow IPC responses.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analysis/pivot/drilldown": {
+      "post": {
+        "operationId": "pivotDrilldown",
+        "responses": {
+          "200": {
+            "description": "Drilldown page response"
+          }
+        }
+      }
+    },
+    "/v1/analysis/templates": {
+      "get": {
+        "operationId": "listAnalysisTemplates",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisTemplateListResponse"
+                }
+              }
+            },
+            "description": "Analysis templates visible to the current user in the active project"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createAnalysisTemplate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalysisTemplateUpsertRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisTemplateResponse"
+                }
+              }
+            },
+            "description": "Analysis template created"
+          }
+        }
+      }
+    },
+    "/v1/analysis/templates/{template_id}": {
+      "delete": {
+        "operationId": "deleteAnalysisTemplate",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisTemplateDeleteResponse"
+                }
+              }
+            },
+            "description": "Analysis template deleted"
+          }
+        }
+      },
+      "get": {
+        "operationId": "getAnalysisTemplate",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisTemplateResponse"
+                }
+              }
+            },
+            "description": "Analysis template details"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateAnalysisTemplate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalysisTemplateUpsertRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisTemplateResponse"
+                }
+              }
+            },
+            "description": "Analysis template updated"
+          }
+        }
+      }
+    },
+    "/v1/analysis/templates/{template_id}/publish": {
+      "post": {
+        "operationId": "publishAnalysisTemplate",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisTemplateResponse"
+                }
+              }
+            },
+            "description": "Analysis template published to the active project"
+          }
+        }
+      }
+    },
+    "/v1/analysis/templates/{template_id}/unpublish": {
+      "post": {
+        "operationId": "unpublishAnalysisTemplate",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisTemplateResponse"
+                }
+              }
+            },
+            "description": "Analysis template returned to owner-private scope"
+          }
+        }
+      }
+    },
+    "/v1/approvals/approver-resolution": {
+      "post": {
+        "operationId": "resolveEffectiveApprover",
+        "responses": {
+          "200": {
+            "description": "Provider-neutral approver availability, delegation, and escalation resolution"
+          }
+        }
+      }
+    },
+    "/v1/approvals/callback": {
+      "post": {
+        "operationId": "submitApprovalAction",
+        "responses": {
+          "200": {
+            "description": "Approval action applied"
+          }
+        }
+      }
+    },
+    "/v1/approvals/tasks": {
+      "get": {
+        "operationId": "listApprovalTasks",
+        "responses": {
+          "200": {
+            "description": "Pending approval tasks for the current approver"
+          }
+        }
+      }
+    },
+    "/v1/audit/events/search": {
+      "get": {
+        "operationId": "auditSearch",
+        "responses": {
+          "200": {
+            "description": "Audit search results"
+          }
+        }
+      }
+    },
+    "/v1/classification/catalog/{data_source_id}": {
+      "get": {
+        "operationId": "classificationCatalog",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassificationCatalogResponse"
+                }
+              }
+            },
+            "description": "Project/data-source scoped active classification catalog with regulation and retention metadata"
+          }
+        }
+      }
+    },
+    "/v1/classification/policies/{data_source_id}": {
+      "get": {
+        "operationId": "listClassificationPolicies",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassificationPoliciesResponse"
+                }
+              }
+            },
+            "description": "Runtime field classification policies with governing rule-version, category, regulation, and retention metadata"
+          }
+        }
+      }
+    },
+    "/v1/classification/policies/{data_source_id}/confirm": {
+      "post": {
+        "operationId": "confirmClassificationPolicies",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmClassificationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassificationPoliciesResponse"
+                }
+              }
+            },
+            "description": "Manual classification confirmation bound to a rule version and catalog metadata"
+          }
+        }
+      }
+    },
+    "/v1/classification/rule-versions/{data_source_id}": {
+      "get": {
+        "operationId": "listClassificationRuleVersions",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassificationRuleVersionsResponse"
+                }
+              }
+            },
+            "description": "Classification rule-version governance list for the active project and data source"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createClassificationRuleVersion",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClassificationRuleVersionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassificationRuleVersionResponse"
+                }
+              }
+            },
+            "description": "Draft classification rule version created with derived catalog metadata"
+          }
+        }
+      }
+    },
+    "/v1/classification/rule-versions/{data_source_id}/{rule_version_id}/activate": {
+      "post": {
+        "operationId": "activateClassificationRuleVersion",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassificationRuleVersionResponse"
+                }
+              }
+            },
+            "description": "Classification rule version activated and previous active version retired"
+          }
+        }
+      }
+    },
+    "/v1/classification/rule-versions/{data_source_id}/{rule_version_id}/retire": {
+      "post": {
+        "operationId": "retireClassificationRuleVersion",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassificationRuleVersionResponse"
+                }
+              }
+            },
+            "description": "Classification rule version retired"
+          }
+        }
+      }
+    },
+    "/v1/exports/download/{download_token}": {
+      "get": {
+        "operationId": "downloadEvidencePackage",
+        "responses": {
+          "200": {
+            "description": "Evidence package payload download"
+          }
+        }
+      }
+    },
+    "/v1/exports/evidence": {
+      "post": {
+        "operationId": "exportEvidencePackage",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvidenceExportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvidenceExportResponse"
+                }
+              }
+            },
+            "description": "Evidence export task created"
+          }
+        }
+      }
+    },
+    "/v1/exports/tasks/{task_id}": {
+      "get": {
+        "operationId": "exportTaskStatus",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvidenceExportResponse"
+                }
+              }
+            },
+            "description": "Evidence export task status"
+          }
+        }
+      }
+    },
+    "/v1/exports/tasks/{task_id}/authorize-download": {
+      "post": {
+        "operationId": "authorizeEvidenceDownload",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExportDownloadAuthorizationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportDownloadAuthorizationResponse"
+                }
+              }
+            },
+            "description": "One-time download authorization issued"
+          },
+          "409": {
+            "description": "Evidence certification is not completed"
+          }
+        }
+      }
+    },
+    "/v1/exports/tasks/{task_id}/refresh-anchor": {
+      "post": {
+        "operationId": "refreshEvidenceAnchor",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvidenceExportResponse"
+                }
+              }
+            },
+            "description": "Evidence anchor receipt refreshed and verification state recalculated"
+          }
+        }
+      }
+    },
+    "/v1/permissions/applications": {
+      "post": {
+        "operationId": "submitPermissionApplication",
+        "responses": {
+          "200": {
+            "description": "Permission application submitted"
+          }
+        }
+      }
+    },
+    "/v1/permissions/grants": {
+      "get": {
+        "operationId": "listPermissionGrants",
+        "responses": {
+          "200": {
+            "description": "Current user grants in the active project"
+          }
+        }
+      }
+    },
+    "/v1/projects": {
+      "get": {
+        "operationId": "listProjects",
+        "responses": {
+          "200": {
+            "description": "Tenant project catalog"
+          }
+        }
+      }
+    },
+    "/v1/projects/{project_id}/state": {
+      "post": {
+        "operationId": "updateProjectState",
+        "responses": {
+          "200": {
+            "description": "Project lifecycle transitioned"
+          }
+        }
+      }
+    },
+    "/v1/queries": {
+      "post": {
+        "operationId": "submitQuery",
+        "responses": {
+          "200": {
+            "description": "Async query task created"
+          }
+        }
+      }
+    },
+    "/v1/snapshots/{snapshot_id}/page": {
+      "get": {
+        "operationId": "snapshotPage",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page_size",
+            "schema": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "response_format",
+            "schema": {
+              "$ref": "#/components/schemas/AnalysisResponseFormat"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SnapshotPageResponse"
+                }
+              },
+              "application/vnd.apache.arrow.stream": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Snapshot detail page",
+            "headers": {
+              "x-sdqp-response-meta": {
+                "description": "Base64-encoded JSON metadata for Arrow IPC responses.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/tasks/{task_id}/status": {
+      "get": {
+        "operationId": "queryTaskStatus",
+        "responses": {
+          "200": {
+            "description": "Query task status"
+          }
+        }
+      }
+    },
+    "/v1/ueba/alerts": {
+      "get": {
+        "operationId": "uebaAlerts",
+        "responses": {
+          "200": {
+            "description": "UEBA alert list"
+          }
+        }
+      }
+    },
+    "/v1/ueba/baselines": {
+      "get": {
+        "operationId": "uebaBaselines",
+        "responses": {
+          "200": {
+            "description": "UEBA user and entity baselines"
+          }
+        }
+      }
+    },
+    "/v1/watermarks/dlp/evaluate": {
+      "post": {
+        "operationId": "evaluateWatermarkDlpPolicy",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DlpPolicyEvaluateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DlpPolicyEvaluateResponse"
+                }
+              }
+            },
+            "description": "Watermark detection plus DLP provider policy decision"
+          }
+        }
+      }
+    },
+    "/v1/worker/project-queue": {
+      "get": {
+        "operationId": "workerProjectQueue",
+        "responses": {
+          "200": {
+            "description": "Worker queue scope inspection"
+          }
+        }
+      }
+    }
+  },
+  "x-sdqp-grpc-services": [
+    {
+      "description": "Standalone gRPC boundary for external DLP and leak-detection systems to detect, verify, and batch scan SDQP watermarks.",
+      "entrypoint": "sdqp-watermark-grpc",
+      "methods": [
+        "DetectWatermarks",
+        "VerifyWatermark",
+        "BatchScan",
+        "EvaluateDlpPolicy"
+      ],
+      "name": "WatermarkDetectionService",
+      "package": "sdqp.watermark.v1"
+    }
+  ]
+}

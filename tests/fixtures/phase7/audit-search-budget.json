@@ -1,0 +1,6 @@
+{
+  "event_requests": 40,
+  "search_iterations": 60,
+  "limit": 20,
+  "max_duration_ms": 2000
+}

@@ -1,0 +1,58 @@
+services:
+  hive-metastore:
+    image: apache/hive:4.0.0
+    environment:
+      SERVICE_NAME: metastore
+      HIVE_CUSTOM_CONF_DIR: /opt/hive/conf
+    ports:
+      - "9083:9083"
+    volumes:
+      - hive-warehouse:/opt/hive/data/warehouse
+      - hive-metastore-data:/opt/hive/data/metastore
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/9083'"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 60s
+
+  hive-server:
+    image: apache/hive:4.0.0
+    depends_on:
+      hive-metastore:
+        condition: service_healthy
+    environment:
+      SERVICE_NAME: hiveserver2
+      IS_RESUME: "true"
+      SERVICE_OPTS: "-Dhive.metastore.uris=thrift://hive-metastore:9083"
+    ports:
+      - "10000:10000"
+      - "10002:10002"
+    volumes:
+      - hive-warehouse:/opt/hive/data/warehouse
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/hive/bin/beeline -u jdbc:hive2://127.0.0.1:10000/default -n hive --silent=true -e 'SELECT 1' >/tmp/sdqp-hive-health.out 2>/tmp/sdqp-hive-health.err"]
+      interval: 20s
+      timeout: 15s
+      retries: 30
+      start_period: 120s
+
+  hive-init:
+    image: apache/hive:4.0.0
+    depends_on:
+      hive-server:
+        condition: service_healthy
+    volumes:
+      - ./docker/hive/init:/opt/sdqp/hive/init:ro
+    entrypoint:
+      - /bin/bash
+      - -lc
+      - |
+        /opt/hive/bin/beeline -u jdbc:hive2://hive-server:10000/default -n hive \
+          --silent=true \
+          -f /opt/sdqp/hive/init/001_sdqp_fixture.hql
+    restart: "no"
+
+volumes:
+  hive-warehouse:
+  hive-metastore-data:

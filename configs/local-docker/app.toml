@@ -1,0 +1,72 @@
+environment = "local-docker"
+
+[api]
+host = "0.0.0.0"
+external_query_worker = true
+
+[worker]
+host = "0.0.0.0"
+
+[frontend]
+title = "SDQP Local Docker"
+api_base_url = ""
+
+[database.postgres]
+dsn = "postgres://sdqp:sdqp@postgres:5432/sdqp"
+
+[database.clickhouse]
+http_url = "http://clickhouse:8123"
+native_url = "tcp://clickhouse:9000"
+
+[object_store]
+endpoint = "http://minio:9000"
+
+[kafka]
+brokers = ["redpanda:9092"]
+
+[integrations]
+im_webhook_url = "http://mockserver:1080/im/webhook"
+
+[integrations.hr]
+base_url = "http://mockserver:1080/hr"
+
+[integrations.notifications]
+feishu_webhook_url = "http://mockserver:1080/notify/feishu"
+slack_webhook_url = "http://mockserver:1080/notify/slack"
+email_api_url = "http://mockserver:1080/notify/email"
+telegram_bot_api_url = "http://mockserver:1080/notify/telegram"
+dingtalk_webhook_url = "http://mockserver:1080/notify/dingtalk"
+retry_backoff_ms = 250
+
+[integrations.tsa]
+provider = "mock"
+base_url = "http://mockserver:1080/tsa"
+authority = "mock-tsa"
+timeout_ms = 3000
+
+[integrations.blockchain_anchor]
+provider = "mock"
+base_url = "http://mockserver:1080/anchor"
+network = "mock-chain"
+timeout_ms = 3000
+
+[audit.checkpoint]
+provider = "mock"
+key_id = "sdqp-local-audit-checkpoint"
+key_version = "1"
+
+[audit.forwarder]
+enabled = true
+provider = "webhook"
+timeout_ms = 3000
+webhook_url = "http://mockserver:1080/audit/siem"
+kafka_brokers = ["redpanda:9092"]
+kafka_topic = "sdqp.audit.siem.local"
+syslog_endpoint = "mockserver:15140"
+syslog_hostname = "sdqp-local"
+syslog_app_name = "sdqp-audit"
+
+[audit.retention]
+enabled = true
+archive_after_secs = 7776000
+archive_dir = ""

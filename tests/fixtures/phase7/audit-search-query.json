@@ -1,0 +1,6 @@
+{
+  "action": "view",
+  "actor_user_id": "user-analyst",
+  "resource_id_contains": "project-context",
+  "limit": 10
+}

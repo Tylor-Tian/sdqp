@@ -1,0 +1,31 @@
+[package]
+name = "sdqp-mcp-gateway"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+async-trait.workspace = true
+base64.workspace = true
+chrono.workspace = true
+sdqp-audit = { path = "../sdqp-audit" }
+sdqp-core = { path = "../sdqp-core" }
+sdqp-datasource-adapter = { path = "../sdqp-datasource-adapter" }
+sdqp-permission-engine = { path = "../sdqp-permission-engine" }
+sdqp-watermark = { path = "../sdqp-watermark" }
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+thiserror.workspace = true
+ulid.workspace = true
+
+[dev-dependencies]
+sdqp-approval-engine = { path = "../sdqp-approval-engine" }
+sdqp-data-classification = { path = "../sdqp-data-classification" }
+sdqp-data-view = { path = "../sdqp-data-view" }
+sdqp-encryption = { path = "../sdqp-encryption" }
+sdqp-hr-integration = { path = "../sdqp-hr-integration" }
+sdqp-system-security = { path = "../sdqp-system-security" }
+tokio.workspace = true

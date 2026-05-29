@@ -1,0 +1,19 @@
+[package]
+name = "sdqp-approval-engine"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+chrono.workspace = true
+sdqp-hr-integration = { path = "../sdqp-hr-integration" }
+serde.workspace = true
+thiserror.workspace = true
+toml.workspace = true
+ulid.workspace = true
+
+[dev-dependencies]
+sdqp-data-classification = { path = "../sdqp-data-classification" }
+sdqp-permission-engine = { path = "../sdqp-permission-engine" }
